@@ -7,6 +7,7 @@
     <class>jpa.Scoreboard</class>
     <class>jpa.Configurations</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <non-jta-data-source>java:/comp/env/jdbc/postgresql</non-jta-data-source>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/lunarlander"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
