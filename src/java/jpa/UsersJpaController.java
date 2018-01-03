@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import jpa.exceptions.NonexistentEntityException;
 
 /**
@@ -234,5 +235,22 @@ public class UsersJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    /**
+     * Find username by the username with namedquery
+     *
+     * @param username
+     * @return
+     */
+    public Users findUserByUsername(String username) {
+        EntityManager em = getEntityManager();
+        try {
+            return (Users) em.createNamedQuery("User.findByUsername").setParameter("username", username).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
 }
