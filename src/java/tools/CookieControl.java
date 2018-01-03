@@ -20,29 +20,54 @@ public class CookieControl {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("LLPASS_TEAMWORKPU");
     UsersJpaController uc = new UsersJpaController(emf);
 
+    /**
+     * Method to check if the user exists inside the cookie array. If this
+     * exists and the password exists, returns the user.
+     *
+     * @param cookies
+     * @return the user
+     */
     public Users checkCookie(Cookie cookies[]) {
         String username = null;
         String password = null;
 
         for (Cookie c : cookies) {
-            if (c.getName().equals("username")) {
+            if (c.getName().equals("usrnam")) {
                 username = c.getValue();
             }
-            if (c.getName().equals("password")) {
+            if (c.getName().equals("passwd")) {
                 password = c.getValue();
             }
         }
         if (username != null && password != null) {
             Users u = uc.findUserByUsername(username);
-            if(u!=null&&u.getPassword().equals(password)){
+            
+            if (u != null && u.getPassword().equals(password)) {
                 return u;
-            }else{
+            } else {
                 return null;
             }
-            
+
         }
 
         return null;
+    }
+
+    public Cookie[] createCookies(String user, String pass) {
+        
+        Cookie userCookie = new Cookie("usrnam", user);
+        Cookie passCookie = new Cookie("passwd", pass);
+        
+        userCookie.setMaxAge(60 * 30);
+        passCookie.setMaxAge(60 * 30);
+        
+        userCookie.setPath("/");
+        passCookie.setPath("/");
+
+        Cookie cookies[] = {userCookie, passCookie};
+
+        return cookies;
+
     }
 
 }

@@ -14,7 +14,14 @@ import java.security.NoSuchAlgorithmException;
  */
 public class PassCrypt {
     
-    private String encrypt(String input) throws NoSuchAlgorithmException {
+    /**
+     * Method to create a personal sha1 encription.
+     * Do not change after data is inside the server, otherwhise passwords will not match.
+     * @param input
+     * @return
+     * @throws NoSuchAlgorithmException 
+     */
+    public String encrypt(String input) throws NoSuchAlgorithmException {
         MessageDigest mDigest = MessageDigest.getInstance("SHA-1");
         String strong = "2pac" + input + "is" + input + "dead";
         byte[] result = mDigest.digest(strong.getBytes());

@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import jpa.Users;
 import jpa.UsersJpaController;
 import tools.CookieControl;
+import tools.PassCrypt;
 
 /**
  *
@@ -30,24 +34,47 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        CookieControl cookieController = new CookieControl();
+        Users u = cookieController.checkCookie(req.getCookies());
 
+        if (u != null) {
+
+            req.setAttribute("User", u);
+            RequestDispatcher forwardTo = req.getRequestDispatcher("/game.jsp");
+            forwardTo.forward(req, resp);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        Map<String, String> emess = new HashMap<>();
+        emess.put("error", "This username was not found");
+        Gson gson = new GsonBuilder().create();
         Users u = uc.findUserByUsername(req.getParameter("username"));
+        PassCrypt ps = new PassCrypt();
 
         if (u == null) {
-            //create the error message JSON type
-            Map<String, String> emess = new HashMap<>();
-            emess.put("error", "This username was not found");
-
-            Gson gson = new GsonBuilder().create();
+            //create the error message JSON type            
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json");
             PrintWriter pw = resp.getWriter();
             pw.println(gson.toJson(emess));
+        } else {
+            try {
+                if (u.getPassword().equals(ps.encrypt(req.getParameter("password")))) {
+                    req.setAttribute("User", u);
+                    RequestDispatcher forwardTo = req.getRequestDispatcher("/game.jsp");
+                    forwardTo.forward(req, resp);
+                } else {
+
+                    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    resp.setContentType("application/json");
+                    PrintWriter pw = resp.getWriter();
+                    pw.println(gson.toJson(emess));
+                }
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
