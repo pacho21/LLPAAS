@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jpa;
+package model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import jpa.exceptions.NonexistentEntityException;
+import model.exceptions.NonexistentEntityException;
 
 /**
  *
@@ -35,12 +35,12 @@ public class ScoreboardJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Configurations cfId = scoreboard.getCfId();
+            Configuration cfId = scoreboard.getCfId();
             if (cfId != null) {
                 cfId = em.getReference(cfId.getClass(), cfId.getCfId());
                 scoreboard.setCfId(cfId);
             }
-            Users usId = scoreboard.getUsId();
+            User usId = scoreboard.getUsId();
             if (usId != null) {
                 usId = em.getReference(usId.getClass(), usId.getUsId());
                 scoreboard.setUsId(usId);
@@ -68,10 +68,10 @@ public class ScoreboardJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Scoreboard persistentScoreboard = em.find(Scoreboard.class, scoreboard.getScId());
-            Configurations cfIdOld = persistentScoreboard.getCfId();
-            Configurations cfIdNew = scoreboard.getCfId();
-            Users usIdOld = persistentScoreboard.getUsId();
-            Users usIdNew = scoreboard.getUsId();
+            Configuration cfIdOld = persistentScoreboard.getCfId();
+            Configuration cfIdNew = scoreboard.getCfId();
+            User usIdOld = persistentScoreboard.getUsId();
+            User usIdNew = scoreboard.getUsId();
             if (cfIdNew != null) {
                 cfIdNew = em.getReference(cfIdNew.getClass(), cfIdNew.getCfId());
                 scoreboard.setCfId(cfIdNew);
@@ -126,12 +126,12 @@ public class ScoreboardJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The scoreboard with id " + id + " no longer exists.", enfe);
             }
-            Configurations cfId = scoreboard.getCfId();
+            Configuration cfId = scoreboard.getCfId();
             if (cfId != null) {
                 cfId.getScoreboardCollection().remove(scoreboard);
                 cfId = em.merge(cfId);
             }
-            Users usId = scoreboard.getUsId();
+            User usId = scoreboard.getUsId();
             if (usId != null) {
                 usId.getScoreboardCollection().remove(scoreboard);
                 usId = em.merge(usId);

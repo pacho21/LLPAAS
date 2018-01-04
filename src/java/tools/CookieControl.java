@@ -8,8 +8,9 @@ package tools;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.http.Cookie;
-import jpa.Users;
-import jpa.UsersJpaController;
+import model.User;
+import model.UserJpaController;
+
 
 /**
  *
@@ -17,8 +18,8 @@ import jpa.UsersJpaController;
  */
 public class CookieControl {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("LLPASS_TEAMWORKPU");
-    UsersJpaController uc = new UsersJpaController(emf);
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("LLPASSPU");
+    UserJpaController uc = new UserJpaController(emf);
 
     /**
      * Method to check if the user exists inside the cookie array. If this
@@ -27,7 +28,7 @@ public class CookieControl {
      * @param cookies
      * @return the user
      */
-    public Users checkCookie(Cookie cookies[]) {
+    public User checkCookie(Cookie cookies[]) {
         String username = null;
         String password = null;
 
@@ -40,7 +41,7 @@ public class CookieControl {
             }
         }
         if (username != null && password != null) {
-            Users u = uc.findUserByUsername(username);
+            User u = uc.findUserByUsername(username);
             
             if (u != null && u.getPassword().equals(password)) {
                 return u;

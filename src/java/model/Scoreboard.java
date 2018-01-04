@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jpa;
+package model;
 
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author admin
  */
 @Entity
-@Table(name = "SCOREBOARD")
+@Table(name = "scoreboard")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Scoreboard.findAll", query = "SELECT s FROM Scoreboard s")
@@ -41,23 +42,23 @@ public class Scoreboard implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "SC_ID")
+    @Column(name = "sc_id")
     private Integer scId;
-    @Column(name = "SC_POINTS")
+    @Column(name = "sc_points")
     private Integer scPoints;
-    @Column(name = "SC_START_TIME")
-    @Temporal(TemporalType.TIME)
-    private Date scStartTime;
     @Basic(optional = false)
-    @Column(name = "SC_END_TIME")
-    @Temporal(TemporalType.TIME)
+    @Column(name = "sc_start_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date scStartTime;
+    @Column(name = "sc_end_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date scEndTime;
-    @JoinColumn(name = "CF_ID", referencedColumnName = "CF_ID")
-    @ManyToOne
-    private Configurations cfId;
-    @JoinColumn(name = "US_ID", referencedColumnName = "US_ID")
-    @ManyToOne
-    private Users usId;
+    @JoinColumn(name = "cf_id", referencedColumnName = "cf_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Configuration cfId;
+    @JoinColumn(name = "us_id", referencedColumnName = "us_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private User usId;
 
     public Scoreboard() {
     }
@@ -66,9 +67,9 @@ public class Scoreboard implements Serializable {
         this.scId = scId;
     }
 
-    public Scoreboard(Integer scId, Date scEndTime) {
+    public Scoreboard(Integer scId, Date scStartTime) {
         this.scId = scId;
-        this.scEndTime = scEndTime;
+        this.scStartTime = scStartTime;
     }
 
     public Integer getScId() {
@@ -103,19 +104,19 @@ public class Scoreboard implements Serializable {
         this.scEndTime = scEndTime;
     }
 
-    public Configurations getCfId() {
+    public Configuration getCfId() {
         return cfId;
     }
 
-    public void setCfId(Configurations cfId) {
+    public void setCfId(Configuration cfId) {
         this.cfId = cfId;
     }
 
-    public Users getUsId() {
+    public User getUsId() {
         return usId;
     }
 
-    public void setUsId(Users usId) {
+    public void setUsId(User usId) {
         this.usId = usId;
     }
 
@@ -141,7 +142,7 @@ public class Scoreboard implements Serializable {
 
     @Override
     public String toString() {
-        return "jpa.Scoreboard[ scId=" + scId + " ]";
+        return "model.Scoreboard[ scId=" + scId + " ]";
     }
     
 }

@@ -29,7 +29,7 @@ public class DataBaseListener implements ServletContextListener{
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("LLPASS_TEAMWORKPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("LLPASSPU");
         sce.getServletContext().setAttribute("emf", emf);
     }
 

@@ -1,38 +1,103 @@
-$(function() {
+  $(function () {
+  $("#doLog").click(function () {
 
-    $('#login-form-link').click(function(e) {
-    	$("#login-form").delay(100).fadeIn(100);
- 		$("#register-form").fadeOut(100);
-		$('#register-form-link').removeClass('active');
-		$(this).addClass('active');
-		e.preventDefault();
-	});
-	$('#register-form-link').click(function(e) {
-		$("#register-form").delay(100).fadeIn(100);
- 		$("#login-form").fadeOut(100);
-		$('#login-form-link').removeClass('active');
-		$(this).addClass('active');
-		e.preventDefault();
-	});
+        var username = $("#username").val();
+        var password = $("#password").val();
 
-});
+        if ($("#username").val().trim().length < 1) {
 
-$(document).ready(function () {
-    $('#myCarousel').carousel({
-        interval: 10000
-    });
-    $('.fdi-Carousel .item').each(function () {
-        var next = $(this).next();
-        if (!next.length) {
-            next = $(this).siblings(':first');
-        }
-        next.children(':first-child').clone().appendTo($(this));
+            $("#username").focus();
+        } else {
 
-        if (next.next().length > 0) {
-            next.next().children(':first-child').clone().appendTo($(this));
-        }
-        else {
-            $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+            if ($("#password").val().trim().length < 1) {
+                $("#password").focus();
+            } else {
+
+                doLogin(username, password);
+            }
         }
     });
+    $("#register").click(function () {
+
+        if ($("#regUser").val().trim().length < 1) {
+            $("#regUser").focus();
+        } else {
+            if ($("#regName").val().trim().length < 1) {
+                $("#regName").focus();
+            } else {
+                if ($("#regPassword").val().trim().length < 1) {
+                    $("#regPassword").focus();
+                } else {
+                    doReg($("#regUser").val(), $("#regName").val(), $("#regPassword").val());
+                }
+            }
+        }
+
+    });
 });
+
+
+function doLogin(user, password) {
+
+    var emess = "Error desconocido, contactar con el administrador!"
+
+    $.ajax({
+        type: "POST",
+        url: "Login",
+        data: {username: user, password: password},
+        success: function (rsp) {
+            //en vez de un alert deberiamos usar algo del bootstrap ;D
+            if (rsp["mess"] === "User does not exists.") {
+                alert(rsp["mess"]);
+                $("#username").val("");
+                $("#password").val("");
+                $("#username").focus();
+            } else {
+                if (rsp["mess"] === "Wrong password.") {
+                    alert(rsp["mess"]);
+                    $("#password").val("");
+                    $("#password").focus();
+                } else {
+                    if (rsp["mess"] === undefined)
+                        location.reload();
+                }
+            }
+        },
+        error: function (e) {
+            if (e["responseJSON"] === undefined)
+                alert(emess);
+            else
+                alert(e["responseJSON"]["error"]);
+        }
+
+    });
+}
+
+
+function doReg(regUser, regName, regPassword) {
+    var emess = "Error desconocido, contactar con el administrador!"
+
+    $.ajax({
+        type: "POST",
+        url: "Register",
+        data: {username: regUser, password: regPassword, name: regName},
+        success: function (rsp) {
+            //en vez de un alert deberiamos usar algo del bootstrap ;D
+            if (rsp["mess"] === "El nombre de usuario ya esta registrado, porfavor introduzca otro nombre de usuario.") {
+                alert(rsp["mess"]);
+                $("#regUser").val("");
+                $("#regUser").focus();
+            } else {
+                location.reload();
+            }
+
+        },
+        error: function (e) {
+            if (e["responseJSON"] === undefined)
+                alert(emess);
+            else
+                alert(e["responseJSON"]["error"]);
+        }
+
+    });
+}
