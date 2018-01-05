@@ -389,29 +389,29 @@ function crearNave(m, d, l) {
     }
     if (l == 2) {
         document.getElementById("luna").src = "img/mod2luna.png";
-        document.getElementById("modeloLuna").innerHTML = "Gris";
+        document.getElementById("modeloLuna").innerHTML = "Grey";
     } else {
         document.getElementById("luna").src = "img/luna.png";
-        document.getElementById("modeloLuna").innerHTML = "Amarilla";
+        document.getElementById("modeloLuna").innerHTML = "Yellow";
     }
 
     switch (d) {
         case 1:
             gasolina = 100;
             gasolinaTotal = 100;
-            document.getElementById("dificultad").innerHTML = "Fácil";
+            document.getElementById("dificultad").innerHTML = "Easy";
             restart();
             break;
         case 2:
             gasolina = 50;
             gasolinaTotal = 50;
-            document.getElementById("dificultad").innerHTML = "Media";
+            document.getElementById("dificultad").innerHTML = "Medium";
             restart();
             break;
         case 3:
             gasolina = 25;
             gasolinaTotal = 35;
-            document.getElementById("dificultad").innerHTML = "Difícil";
+            document.getElementById("dificultad").innerHTML = "Hard";
             restart();
             break;
     }
@@ -426,7 +426,7 @@ function cargarGSON() {
         url: "ServletConfiguraciones", //canviar al Servlet després de comprovar que funciona.
         dataType: "json",
         success: function (jsn) {
-            if (jsn["mess"] === "No existen configuraciones") {
+            if (jsn["mess"] === "Configuration not found") {
                 alert(jsn["mess"] + jsn["user"]);
             }
             $.each(jsn.config, function (i)
