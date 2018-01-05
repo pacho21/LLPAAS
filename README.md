@@ -1,6 +1,6 @@
 # Lunar Lander Team Work / JPA ORM PAAS
 
-Play the game on PAAS : //link
+Play the game on PAAS : http://35.188.215.148/LLPASS/
 
 This application is based in the classic game Lunar Lander. The project base started from the following github : https://github.com/urbinapro/lunar-landing-javascript 
 The application has been developed by Polina Svetlinova (frontend: https://github.com/polinasvetlinova/ ) and Plamen Valentinov (backend: https://github.com/pacho21/ )
