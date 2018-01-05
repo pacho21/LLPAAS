@@ -4,6 +4,7 @@ This application is based in the classic game Lunar Lander. The project base sta
 The application has been developed by Polina Svetlinova (frontend: https://github.com/polinasvetlinova/ ) and Plamen Valentinov (backend: https://github.com/pacho21/ )
 
 Find the documentation here : http://bit.ly/2F0FV6i
+
 Find the workflow distribution here: http://bit.ly/2CWM8ja
 
 # Versions
