@@ -6,7 +6,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,7 +50,7 @@ public class Dificulty implements Serializable {
     @Column(name = "pointMultiply")
     private int pointMultiply;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cfDificulty", fetch = FetchType.EAGER)
-    private Collection<Configuration> configurationCollection;
+    private List<Configuration> configurationList;
 
     public Dificulty() {
     }
@@ -99,12 +99,12 @@ public class Dificulty implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Configuration> getConfigurationCollection() {
-        return configurationCollection;
+    public List<Configuration> getConfigurationList() {
+        return configurationList;
     }
 
-    public void setConfigurationCollection(Collection<Configuration> configurationCollection) {
-        this.configurationCollection = configurationCollection;
+    public void setConfigurationList(List<Configuration> configurationList) {
+        this.configurationList = configurationList;
     }
 
     @Override

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Context>
 <Context antiJARLocking="true" path="/LLPASS">
+<Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="20" maxIdle="10" 
+          maxWait="-1" name="jdbc/MysqlDB" password="pacho" type="javax.sql.DataSource" 
+          url="jdbc:mysql://35.205.245.78:3306/lunarlander?zeroDateTimeBehavior=convertToNull" 
+          username="root"/>
 </Context>

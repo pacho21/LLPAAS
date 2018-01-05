@@ -11,7 +11,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -35,45 +34,45 @@ public class UserJpaController implements Serializable {
     }
 
     public void create(User user) {
-        if (user.getConfigurationCollection() == null) {
-            user.setConfigurationCollection(new ArrayList<Configuration>());
+        if (user.getConfigurationList() == null) {
+            user.setConfigurationList(new ArrayList<Configuration>());
         }
-        if (user.getScoreboardCollection() == null) {
-            user.setScoreboardCollection(new ArrayList<Scoreboard>());
+        if (user.getScoreboardList() == null) {
+            user.setScoreboardList(new ArrayList<Scoreboard>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Configuration> attachedConfigurationCollection = new ArrayList<Configuration>();
-            for (Configuration configurationCollectionConfigurationToAttach : user.getConfigurationCollection()) {
-                configurationCollectionConfigurationToAttach = em.getReference(configurationCollectionConfigurationToAttach.getClass(), configurationCollectionConfigurationToAttach.getCfId());
-                attachedConfigurationCollection.add(configurationCollectionConfigurationToAttach);
+            List<Configuration> attachedConfigurationList = new ArrayList<Configuration>();
+            for (Configuration configurationListConfigurationToAttach : user.getConfigurationList()) {
+                configurationListConfigurationToAttach = em.getReference(configurationListConfigurationToAttach.getClass(), configurationListConfigurationToAttach.getCfId());
+                attachedConfigurationList.add(configurationListConfigurationToAttach);
             }
-            user.setConfigurationCollection(attachedConfigurationCollection);
-            Collection<Scoreboard> attachedScoreboardCollection = new ArrayList<Scoreboard>();
-            for (Scoreboard scoreboardCollectionScoreboardToAttach : user.getScoreboardCollection()) {
-                scoreboardCollectionScoreboardToAttach = em.getReference(scoreboardCollectionScoreboardToAttach.getClass(), scoreboardCollectionScoreboardToAttach.getScId());
-                attachedScoreboardCollection.add(scoreboardCollectionScoreboardToAttach);
+            user.setConfigurationList(attachedConfigurationList);
+            List<Scoreboard> attachedScoreboardList = new ArrayList<Scoreboard>();
+            for (Scoreboard scoreboardListScoreboardToAttach : user.getScoreboardList()) {
+                scoreboardListScoreboardToAttach = em.getReference(scoreboardListScoreboardToAttach.getClass(), scoreboardListScoreboardToAttach.getScId());
+                attachedScoreboardList.add(scoreboardListScoreboardToAttach);
             }
-            user.setScoreboardCollection(attachedScoreboardCollection);
+            user.setScoreboardList(attachedScoreboardList);
             em.persist(user);
-            for (Configuration configurationCollectionConfiguration : user.getConfigurationCollection()) {
-                User oldUsIdOfConfigurationCollectionConfiguration = configurationCollectionConfiguration.getUsId();
-                configurationCollectionConfiguration.setUsId(user);
-                configurationCollectionConfiguration = em.merge(configurationCollectionConfiguration);
-                if (oldUsIdOfConfigurationCollectionConfiguration != null) {
-                    oldUsIdOfConfigurationCollectionConfiguration.getConfigurationCollection().remove(configurationCollectionConfiguration);
-                    oldUsIdOfConfigurationCollectionConfiguration = em.merge(oldUsIdOfConfigurationCollectionConfiguration);
+            for (Configuration configurationListConfiguration : user.getConfigurationList()) {
+                User oldUsIdOfConfigurationListConfiguration = configurationListConfiguration.getUsId();
+                configurationListConfiguration.setUsId(user);
+                configurationListConfiguration = em.merge(configurationListConfiguration);
+                if (oldUsIdOfConfigurationListConfiguration != null) {
+                    oldUsIdOfConfigurationListConfiguration.getConfigurationList().remove(configurationListConfiguration);
+                    oldUsIdOfConfigurationListConfiguration = em.merge(oldUsIdOfConfigurationListConfiguration);
                 }
             }
-            for (Scoreboard scoreboardCollectionScoreboard : user.getScoreboardCollection()) {
-                User oldUsIdOfScoreboardCollectionScoreboard = scoreboardCollectionScoreboard.getUsId();
-                scoreboardCollectionScoreboard.setUsId(user);
-                scoreboardCollectionScoreboard = em.merge(scoreboardCollectionScoreboard);
-                if (oldUsIdOfScoreboardCollectionScoreboard != null) {
-                    oldUsIdOfScoreboardCollectionScoreboard.getScoreboardCollection().remove(scoreboardCollectionScoreboard);
-                    oldUsIdOfScoreboardCollectionScoreboard = em.merge(oldUsIdOfScoreboardCollectionScoreboard);
+            for (Scoreboard scoreboardListScoreboard : user.getScoreboardList()) {
+                User oldUsIdOfScoreboardListScoreboard = scoreboardListScoreboard.getUsId();
+                scoreboardListScoreboard.setUsId(user);
+                scoreboardListScoreboard = em.merge(scoreboardListScoreboard);
+                if (oldUsIdOfScoreboardListScoreboard != null) {
+                    oldUsIdOfScoreboardListScoreboard.getScoreboardList().remove(scoreboardListScoreboard);
+                    oldUsIdOfScoreboardListScoreboard = em.merge(oldUsIdOfScoreboardListScoreboard);
                 }
             }
             em.getTransaction().commit();
@@ -90,64 +89,64 @@ public class UserJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             User persistentUser = em.find(User.class, user.getUsId());
-            Collection<Configuration> configurationCollectionOld = persistentUser.getConfigurationCollection();
-            Collection<Configuration> configurationCollectionNew = user.getConfigurationCollection();
-            Collection<Scoreboard> scoreboardCollectionOld = persistentUser.getScoreboardCollection();
-            Collection<Scoreboard> scoreboardCollectionNew = user.getScoreboardCollection();
+            List<Configuration> configurationListOld = persistentUser.getConfigurationList();
+            List<Configuration> configurationListNew = user.getConfigurationList();
+            List<Scoreboard> scoreboardListOld = persistentUser.getScoreboardList();
+            List<Scoreboard> scoreboardListNew = user.getScoreboardList();
             List<String> illegalOrphanMessages = null;
-            for (Configuration configurationCollectionOldConfiguration : configurationCollectionOld) {
-                if (!configurationCollectionNew.contains(configurationCollectionOldConfiguration)) {
+            for (Configuration configurationListOldConfiguration : configurationListOld) {
+                if (!configurationListNew.contains(configurationListOldConfiguration)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Configuration " + configurationCollectionOldConfiguration + " since its usId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Configuration " + configurationListOldConfiguration + " since its usId field is not nullable.");
                 }
             }
-            for (Scoreboard scoreboardCollectionOldScoreboard : scoreboardCollectionOld) {
-                if (!scoreboardCollectionNew.contains(scoreboardCollectionOldScoreboard)) {
+            for (Scoreboard scoreboardListOldScoreboard : scoreboardListOld) {
+                if (!scoreboardListNew.contains(scoreboardListOldScoreboard)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Scoreboard " + scoreboardCollectionOldScoreboard + " since its usId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Scoreboard " + scoreboardListOldScoreboard + " since its usId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Configuration> attachedConfigurationCollectionNew = new ArrayList<Configuration>();
-            for (Configuration configurationCollectionNewConfigurationToAttach : configurationCollectionNew) {
-                configurationCollectionNewConfigurationToAttach = em.getReference(configurationCollectionNewConfigurationToAttach.getClass(), configurationCollectionNewConfigurationToAttach.getCfId());
-                attachedConfigurationCollectionNew.add(configurationCollectionNewConfigurationToAttach);
+            List<Configuration> attachedConfigurationListNew = new ArrayList<Configuration>();
+            for (Configuration configurationListNewConfigurationToAttach : configurationListNew) {
+                configurationListNewConfigurationToAttach = em.getReference(configurationListNewConfigurationToAttach.getClass(), configurationListNewConfigurationToAttach.getCfId());
+                attachedConfigurationListNew.add(configurationListNewConfigurationToAttach);
             }
-            configurationCollectionNew = attachedConfigurationCollectionNew;
-            user.setConfigurationCollection(configurationCollectionNew);
-            Collection<Scoreboard> attachedScoreboardCollectionNew = new ArrayList<Scoreboard>();
-            for (Scoreboard scoreboardCollectionNewScoreboardToAttach : scoreboardCollectionNew) {
-                scoreboardCollectionNewScoreboardToAttach = em.getReference(scoreboardCollectionNewScoreboardToAttach.getClass(), scoreboardCollectionNewScoreboardToAttach.getScId());
-                attachedScoreboardCollectionNew.add(scoreboardCollectionNewScoreboardToAttach);
+            configurationListNew = attachedConfigurationListNew;
+            user.setConfigurationList(configurationListNew);
+            List<Scoreboard> attachedScoreboardListNew = new ArrayList<Scoreboard>();
+            for (Scoreboard scoreboardListNewScoreboardToAttach : scoreboardListNew) {
+                scoreboardListNewScoreboardToAttach = em.getReference(scoreboardListNewScoreboardToAttach.getClass(), scoreboardListNewScoreboardToAttach.getScId());
+                attachedScoreboardListNew.add(scoreboardListNewScoreboardToAttach);
             }
-            scoreboardCollectionNew = attachedScoreboardCollectionNew;
-            user.setScoreboardCollection(scoreboardCollectionNew);
+            scoreboardListNew = attachedScoreboardListNew;
+            user.setScoreboardList(scoreboardListNew);
             user = em.merge(user);
-            for (Configuration configurationCollectionNewConfiguration : configurationCollectionNew) {
-                if (!configurationCollectionOld.contains(configurationCollectionNewConfiguration)) {
-                    User oldUsIdOfConfigurationCollectionNewConfiguration = configurationCollectionNewConfiguration.getUsId();
-                    configurationCollectionNewConfiguration.setUsId(user);
-                    configurationCollectionNewConfiguration = em.merge(configurationCollectionNewConfiguration);
-                    if (oldUsIdOfConfigurationCollectionNewConfiguration != null && !oldUsIdOfConfigurationCollectionNewConfiguration.equals(user)) {
-                        oldUsIdOfConfigurationCollectionNewConfiguration.getConfigurationCollection().remove(configurationCollectionNewConfiguration);
-                        oldUsIdOfConfigurationCollectionNewConfiguration = em.merge(oldUsIdOfConfigurationCollectionNewConfiguration);
+            for (Configuration configurationListNewConfiguration : configurationListNew) {
+                if (!configurationListOld.contains(configurationListNewConfiguration)) {
+                    User oldUsIdOfConfigurationListNewConfiguration = configurationListNewConfiguration.getUsId();
+                    configurationListNewConfiguration.setUsId(user);
+                    configurationListNewConfiguration = em.merge(configurationListNewConfiguration);
+                    if (oldUsIdOfConfigurationListNewConfiguration != null && !oldUsIdOfConfigurationListNewConfiguration.equals(user)) {
+                        oldUsIdOfConfigurationListNewConfiguration.getConfigurationList().remove(configurationListNewConfiguration);
+                        oldUsIdOfConfigurationListNewConfiguration = em.merge(oldUsIdOfConfigurationListNewConfiguration);
                     }
                 }
             }
-            for (Scoreboard scoreboardCollectionNewScoreboard : scoreboardCollectionNew) {
-                if (!scoreboardCollectionOld.contains(scoreboardCollectionNewScoreboard)) {
-                    User oldUsIdOfScoreboardCollectionNewScoreboard = scoreboardCollectionNewScoreboard.getUsId();
-                    scoreboardCollectionNewScoreboard.setUsId(user);
-                    scoreboardCollectionNewScoreboard = em.merge(scoreboardCollectionNewScoreboard);
-                    if (oldUsIdOfScoreboardCollectionNewScoreboard != null && !oldUsIdOfScoreboardCollectionNewScoreboard.equals(user)) {
-                        oldUsIdOfScoreboardCollectionNewScoreboard.getScoreboardCollection().remove(scoreboardCollectionNewScoreboard);
-                        oldUsIdOfScoreboardCollectionNewScoreboard = em.merge(oldUsIdOfScoreboardCollectionNewScoreboard);
+            for (Scoreboard scoreboardListNewScoreboard : scoreboardListNew) {
+                if (!scoreboardListOld.contains(scoreboardListNewScoreboard)) {
+                    User oldUsIdOfScoreboardListNewScoreboard = scoreboardListNewScoreboard.getUsId();
+                    scoreboardListNewScoreboard.setUsId(user);
+                    scoreboardListNewScoreboard = em.merge(scoreboardListNewScoreboard);
+                    if (oldUsIdOfScoreboardListNewScoreboard != null && !oldUsIdOfScoreboardListNewScoreboard.equals(user)) {
+                        oldUsIdOfScoreboardListNewScoreboard.getScoreboardList().remove(scoreboardListNewScoreboard);
+                        oldUsIdOfScoreboardListNewScoreboard = em.merge(oldUsIdOfScoreboardListNewScoreboard);
                     }
                 }
             }
@@ -181,19 +180,19 @@ public class UserJpaController implements Serializable {
                 throw new NonexistentEntityException("The user with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Configuration> configurationCollectionOrphanCheck = user.getConfigurationCollection();
-            for (Configuration configurationCollectionOrphanCheckConfiguration : configurationCollectionOrphanCheck) {
+            List<Configuration> configurationListOrphanCheck = user.getConfigurationList();
+            for (Configuration configurationListOrphanCheckConfiguration : configurationListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Configuration " + configurationCollectionOrphanCheckConfiguration + " in its configurationCollection field has a non-nullable usId field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Configuration " + configurationListOrphanCheckConfiguration + " in its configurationList field has a non-nullable usId field.");
             }
-            Collection<Scoreboard> scoreboardCollectionOrphanCheck = user.getScoreboardCollection();
-            for (Scoreboard scoreboardCollectionOrphanCheckScoreboard : scoreboardCollectionOrphanCheck) {
+            List<Scoreboard> scoreboardListOrphanCheck = user.getScoreboardList();
+            for (Scoreboard scoreboardListOrphanCheckScoreboard : scoreboardListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Scoreboard " + scoreboardCollectionOrphanCheckScoreboard + " in its scoreboardCollection field has a non-nullable usId field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Scoreboard " + scoreboardListOrphanCheckScoreboard + " in its scoreboardList field has a non-nullable usId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -252,17 +251,11 @@ public class UserJpaController implements Serializable {
             em.close();
         }
     }
-
-    /**
-     * Find a user.
-     *
-     * @param username
-     * @return Object User in case you find it, otherwise null.
-     */
-    public User findUserByUsername(String username) {
+      public User findUserByUsername(String username) {
         EntityManager em = getEntityManager();
         try {
             return (User) em.createNamedQuery("User.findByUsername").setParameter("username", username).getSingleResult();
+     
         } catch (NoResultException e) {
             return null;
         } finally {
@@ -286,5 +279,4 @@ public class UserJpaController implements Serializable {
             em.close();
         }
     }
-
 }

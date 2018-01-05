@@ -1,5 +1,5 @@
-  $(function () {
-  $("#doLog").click(function () {
+$(function () {
+    $("#doLog").click(function () {
 
         var username = $("#username").val();
         var password = $("#password").val();
@@ -28,7 +28,13 @@
                 if ($("#regPassword").val().trim().length < 1) {
                     $("#regPassword").focus();
                 } else {
-                    doReg($("#regUser").val(), $("#regName").val(), $("#regPassword").val());
+                    if ($("#regPassword").val() === $("#repeatPassword").val()) {
+                        doReg($("#regUser").val(), $("#regName").val(), $("#regPassword").val());
+                    }else{
+                        alert("Passwords must match!");
+                        $("#repeatPassword").val("");
+                        $("#repeatPassword").focus();
+                    }
                 }
             }
         }
@@ -82,16 +88,16 @@ function doReg(regUser, regName, regPassword) {
         url: "Register",
         data: {username: regUser, password: regPassword, name: regName},
         success: function (rsp) {
-                //when succeeds
-                alert(rsp["mess"]);            
-                location.reload();            
+            //when succeeds
+            alert(rsp["mess"]);
+            location.reload();
         },
         error: function (e) {
             if (e["responseJSON"] === undefined)
                 alert(emess);
             else
                 alert(e["responseJSON"]["error"]);
-            if(e["responseJSON"]["error"]=="Username already exists"){
+            if (e["responseJSON"]["error"] == "Username already exists") {
                 $("#username").val("");
                 $("#username").focus();
             }
