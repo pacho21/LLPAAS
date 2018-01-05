@@ -15,13 +15,13 @@ var confXML = [];
 var tempConf;
 $(document).ready(function () {
 
-    cargarGSON();
+    loadConfiguration();
     $("#cargarConf").click(function () { //al hacer click en guardar -> ejecutar metodo ->
         cargarConfiguracion();
     });
     
     $("#guardar").click(function () {
-        guardarConfiguracion();
+        saveConfiguration();
         $("#conf_name").val("");
     });
 });
@@ -380,18 +380,18 @@ function crearNave(m, d, l) {
     if (m == 1) {
         document.getElementById("imgNave").src = "img/nave.png";
         document.getElementById("imgMotor").src = "img/motor.gif";
-        document.getElementById("modeloNave").innerHTML = "Modelo Estándar";
+        document.getElementById("modeloNave").innerHTML = "Standard Model";
     } else {
         document.getElementById("imgNave").src = "img/mod2nave.gif";
         document.getElementById("imgMotor").src = "img/mod2motor.gif";
-        document.getElementById("modeloNave").innerHTML = "Modelo PodRacer";
+        document.getElementById("modeloNave").innerHTML = "PodRacer Model";
     }
     if (l == 2) {
         document.getElementById("luna").src = "img/mod2luna.png";
-        document.getElementById("modeloLuna").innerHTML = "Gris";
+        document.getElementById("modeloLuna").innerHTML = "Gray";
     } else {
         document.getElementById("luna").src = "img/luna.png";
-        document.getElementById("modeloLuna").innerHTML = "Amarilla";
+        document.getElementById("modeloLuna").innerHTML = "Yellow";
     }
 
     switch (d) {
@@ -417,9 +417,9 @@ function crearNave(m, d, l) {
     restart();
 }
 
-function cargarGSON() {
+function loadConfiguration() {
 
-    var emess = "No se ha podido cargar la configuración!";
+    var emess = "We couldn't load your configuration!";
     $.ajax({
         type: "GET",
         url: "ConfigurationServlet", //canviar al Servlet després de comprovar que funciona.
@@ -449,16 +449,16 @@ function cargarGSON() {
     });
 }
 
-function guardarConfiguracion() {
+function saveConfiguration() {
 
-    var emess = "No se ha podido guardar la configuración!"
+    var emess = "We couldn't save your configuration!"
     var nam = $("#conf_name").val();
     var dif = $("#dificultad").text();
     var nav = $("#modeloNave").text();
     var moon = $("#modeloLuna").text();
     var len = $("#conf_name").val().trim().length;
     if (len < 1) {
-        alert("Debes introducir un nombre de configuración");
+        alert("Please insert a name for your configuration");
         $("#conf_name").focus();
     } else {
 
@@ -487,27 +487,6 @@ function guardarConfiguracion() {
     }
 }
 
-//funciones que devuelven el nombre en string de las dificultades / modelos naves
-function  dificultyToString(dif) {
-    if (dif == 1)
-        return "Fácil";
-    if (dif == 2)
-        return "Media";
-    if (dif == 3)
-        return "Difícil";
-}
-function modNaveToString(nav) {
-    if (nav == 1)
-        return "Modelo Estándar";
-    if (nav == 2)
-        return "Modelo PodRacer";
-}
-function modLunaToString(lun) {
-    if (lun == 1)
-        return "Amarilla";
-    if (lun == 2)
-        return "Gris";
-}
 
 function cargarConfiguracion() {
 

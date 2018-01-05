@@ -1,6 +1,6 @@
 #contenedor,html{
 	height:100%;padding:0px;margin:0px;
-	background-image: url("../img/fondo.png");
+	background-image: url("../img/estrellas.png");
 	font-family: Arial;
 }
 #izquierda{
@@ -8,7 +8,7 @@
 	width: 30%;
 	height: 100%;
 	position: fixed;left: 0px;
-	background-image: url("../img/mundo.png");
+	background-image: url("../img/world.png");
 	background-size: 80%;
 	background-repeat: no-repeat;
 	background-position: left bottom;
@@ -32,7 +32,7 @@
 #derechaSmartphone{display: none;}
 
 #derecha{
-	background-image: url("../img/mundo.png");
+	background-image: url("../img/red.png");
 	background-repeat: no-repeat;
 	background-position: right; 
 	background-size: 30%;
@@ -165,7 +165,7 @@
 
 #settings{
 	display: none;
-	background-image: url("../img/fondo.png");
+	background-image: url("../img/blbl.jpg");
 	text-align: center;
 	border-style: outset;
 	position: absolute;
@@ -188,7 +188,7 @@
 
 #menuInstrucciones {
 	margin: 5%;
-	background-image: url("../img/fondo.png");
+	background-image: url("../img/blbl.jpg");
 	text-align: center;
 	border-style: outset;
 	position: absolute;
@@ -241,7 +241,7 @@
 }
 
 #gameOver{
-	background-image: url("../img/fondo.png");
+	background-image: url("../img/blbl.jpg");
 	text-align: center;
 	border-style: outset;
 	position: absolute;
@@ -252,7 +252,7 @@
 }
 
 #userWin{
-	background-image: url("../img/fondo.png");
+	background-image: url("../img/blbl.jpg");
 	text-align: center;
 	border-style: outset;
 	position: absolute;

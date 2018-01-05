@@ -251,17 +251,11 @@ public class UserJpaController implements Serializable {
             em.close();
         }
     }
-
-    /**
-     * Find a user.
-     *
-     * @param username
-     * @return Object User in case you find it, otherwise null.
-     */
-    public User findUserByUsername(String username) {
+      public User findUserByUsername(String username) {
         EntityManager em = getEntityManager();
         try {
             return (User) em.createNamedQuery("User.findByUsername").setParameter("username", username).getSingleResult();
+     
         } catch (NoResultException e) {
             return null;
         } finally {
