@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jpa;
+package model;
 
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,44 +27,53 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author admin
  */
 @Entity
-@Table(name = "USERS")
+@Table(name = "user")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u")
-    , @NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u WHERE u.usId = :usId")
-    , @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username")
-    , @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password")
-    , @NamedQuery(name = "Users.findByRealname", query = "SELECT u FROM Users u WHERE u.realname = :realname")
-    , @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email")
-    , @NamedQuery(name = "Users.findByGamesplayed", query = "SELECT u FROM Users u WHERE u.gamesplayed = :gamesplayed")})
-public class Users implements Serializable {
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+    , @NamedQuery(name = "User.findByUsId", query = "SELECT u FROM User u WHERE u.usId = :usId")
+    , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
+    , @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")
+    , @NamedQuery(name = "User.findByRealname", query = "SELECT u FROM User u WHERE u.realname = :realname")
+    , @NamedQuery(name = "User.findByGamesplayed", query = "SELECT u FROM User u WHERE u.gamesplayed = :gamesplayed")})
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "US_ID")
+    @Column(name = "us_id")
     private Integer usId;
-    @Column(name = "USERNAME")
+    @Basic(optional = false)
+    @Column(name = "username")
     private String username;
-    @Column(name = "PASSWORD")
+    @Basic(optional = false)
+    @Column(name = "password")
     private String password;
-    @Column(name = "REALNAME")
+    @Basic(optional = false)
+    @Column(name = "realname")
     private String realname;
-    @Column(name = "EMAIL")
-    private String email;
-    @Column(name = "GAMESPLAYED")
-    private Integer gamesplayed;
-    @OneToMany(mappedBy = "usId")
-    private Collection<Configurations> configurationsCollection;
-    @OneToMany(mappedBy = "usId")
+    @Basic(optional = false)
+    @Column(name = "gamesplayed")
+    private int gamesplayed;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId", fetch = FetchType.EAGER)
+    private Collection<Configuration> configurationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId", fetch = FetchType.EAGER)
     private Collection<Scoreboard> scoreboardCollection;
 
-    public Users() {
+    public User() {
     }
 
-    public Users(Integer usId) {
+    public User(Integer usId) {
         this.usId = usId;
+    }
+
+    public User(Integer usId, String username, String password, String realname, int gamesplayed) {
+        this.usId = usId;
+        this.username = username;
+        this.password = password;
+        this.realname = realname;
+        this.gamesplayed = gamesplayed;
     }
 
     public Integer getUsId() {
@@ -97,29 +108,21 @@ public class Users implements Serializable {
         this.realname = realname;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getGamesplayed() {
+    public int getGamesplayed() {
         return gamesplayed;
     }
 
-    public void setGamesplayed(Integer gamesplayed) {
+    public void setGamesplayed(int gamesplayed) {
         this.gamesplayed = gamesplayed;
     }
 
     @XmlTransient
-    public Collection<Configurations> getConfigurationsCollection() {
-        return configurationsCollection;
+    public Collection<Configuration> getConfigurationCollection() {
+        return configurationCollection;
     }
 
-    public void setConfigurationsCollection(Collection<Configurations> configurationsCollection) {
-        this.configurationsCollection = configurationsCollection;
+    public void setConfigurationCollection(Collection<Configuration> configurationCollection) {
+        this.configurationCollection = configurationCollection;
     }
 
     @XmlTransient
@@ -141,10 +144,10 @@ public class Users implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Users)) {
+        if (!(object instanceof User)) {
             return false;
         }
-        Users other = (Users) object;
+        User other = (User) object;
         if ((this.usId == null && other.usId != null) || (this.usId != null && !this.usId.equals(other.usId))) {
             return false;
         }
@@ -153,7 +156,7 @@ public class Users implements Serializable {
 
     @Override
     public String toString() {
-        return "jpa.Users[ usId=" + usId + " ]";
+        return "model.User[ usId=" + usId + " ]";
     }
     
 }

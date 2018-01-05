@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jpa;
+package model;
 
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,42 +29,52 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author admin
  */
 @Entity
-@Table(name = "CONFIGURATIONS")
+@Table(name = "configuration")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Configurations.findAll", query = "SELECT c FROM Configurations c")
-    , @NamedQuery(name = "Configurations.findByCfId", query = "SELECT c FROM Configurations c WHERE c.cfId = :cfId")
-    , @NamedQuery(name = "Configurations.findByCfName", query = "SELECT c FROM Configurations c WHERE c.cfName = :cfName")
-    , @NamedQuery(name = "Configurations.findByCfSpaceship", query = "SELECT c FROM Configurations c WHERE c.cfSpaceship = :cfSpaceship")
-    , @NamedQuery(name = "Configurations.findByCfMoon", query = "SELECT c FROM Configurations c WHERE c.cfMoon = :cfMoon")})
-public class Configurations implements Serializable {
+    @NamedQuery(name = "Configuration.findAll", query = "SELECT c FROM Configuration c")
+    , @NamedQuery(name = "Configuration.findByCfId", query = "SELECT c FROM Configuration c WHERE c.cfId = :cfId")
+    , @NamedQuery(name = "Configuration.findByCfName", query = "SELECT c FROM Configuration c WHERE c.cfName = :cfName")
+    , @NamedQuery(name = "Configuration.findByCfMoon", query = "SELECT c FROM Configuration c WHERE c.cfMoon = :cfMoon")
+    , @NamedQuery(name = "Configuration.findByCfSpaceship", query = "SELECT c FROM Configuration c WHERE c.cfSpaceship = :cfSpaceship")})
+public class Configuration implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "CF_ID")
+    @Column(name = "cf_id")
     private Integer cfId;
-    @Column(name = "CF_NAME")
+    @Basic(optional = false)
+    @Column(name = "cf_name")
     private String cfName;
-    @Column(name = "CF_SPACESHIP")
-    private String cfSpaceship;
-    @Column(name = "CF_MOON")
+    @Basic(optional = false)
+    @Column(name = "cf_moon")
     private String cfMoon;
-    @JoinColumn(name = "CF_DIFICULTY", referencedColumnName = "DIFICULTY_NAME")
-    @ManyToOne
+    @Basic(optional = false)
+    @Column(name = "cf_spaceship")
+    private String cfSpaceship;
+    @JoinColumn(name = "cf_dificulty", referencedColumnName = "dif_name")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Dificulty cfDificulty;
-    @JoinColumn(name = "US_ID", referencedColumnName = "US_ID")
-    @ManyToOne
-    private Users usId;
-    @OneToMany(mappedBy = "cfId")
+    @JoinColumn(name = "us_id", referencedColumnName = "us_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private User usId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cfId", fetch = FetchType.EAGER)
     private Collection<Scoreboard> scoreboardCollection;
 
-    public Configurations() {
+    public Configuration() {
     }
 
-    public Configurations(Integer cfId) {
+    public Configuration(Integer cfId) {
         this.cfId = cfId;
+    }
+
+    public Configuration(Integer cfId, String cfName, String cfMoon, String cfSpaceship) {
+        this.cfId = cfId;
+        this.cfName = cfName;
+        this.cfMoon = cfMoon;
+        this.cfSpaceship = cfSpaceship;
     }
 
     public Integer getCfId() {
@@ -81,20 +93,20 @@ public class Configurations implements Serializable {
         this.cfName = cfName;
     }
 
-    public String getCfSpaceship() {
-        return cfSpaceship;
-    }
-
-    public void setCfSpaceship(String cfSpaceship) {
-        this.cfSpaceship = cfSpaceship;
-    }
-
     public String getCfMoon() {
         return cfMoon;
     }
 
     public void setCfMoon(String cfMoon) {
         this.cfMoon = cfMoon;
+    }
+
+    public String getCfSpaceship() {
+        return cfSpaceship;
+    }
+
+    public void setCfSpaceship(String cfSpaceship) {
+        this.cfSpaceship = cfSpaceship;
     }
 
     public Dificulty getCfDificulty() {
@@ -105,11 +117,11 @@ public class Configurations implements Serializable {
         this.cfDificulty = cfDificulty;
     }
 
-    public Users getUsId() {
+    public User getUsId() {
         return usId;
     }
 
-    public void setUsId(Users usId) {
+    public void setUsId(User usId) {
         this.usId = usId;
     }
 
@@ -132,10 +144,10 @@ public class Configurations implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Configurations)) {
+        if (!(object instanceof Configuration)) {
             return false;
         }
-        Configurations other = (Configurations) object;
+        Configuration other = (Configuration) object;
         if ((this.cfId == null && other.cfId != null) || (this.cfId != null && !this.cfId.equals(other.cfId))) {
             return false;
         }
@@ -144,7 +156,7 @@ public class Configurations implements Serializable {
 
     @Override
     public String toString() {
-        return "jpa.Configurations[ cfId=" + cfId + " ]";
+        return "model.Configuration[ cfId=" + cfId + " ]";
     }
     
 }

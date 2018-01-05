@@ -8,13 +8,24 @@
         <servlet-name>Login</servlet-name>
         <servlet-class>servlets.Login</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <servlet-class>servlets.Register</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Register</servlet-name>
+        <url-pattern>/Register</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+        <welcome-file-list>
+        <welcome-file>Login</welcome-file>
+    </welcome-file-list>
 </web-app>
