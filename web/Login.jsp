@@ -29,13 +29,11 @@
                             <div class="carousel-inner onebyone-carosel">
                                 <div class="item active">
                                     <div class="col-md-3">
-                                        <a href="#"><img src="http://placehold.it/250x250" class="img-responsive center-block"></a>
-                                        <div class="text-center">1</div>
+                                        <a href="#"><img src="img/estrellas.png" class="img-responsive center-block"></a>
                                     </div>
                              
                                     <div class="col-md-3">
-                                        <a href="#"><img src="http://placehold.it/250x250" class="img-responsive center-block"></a>
-                                        <div class="text-center">2</div>
+                                      
                                     </div>
                                 </div>
                                 <div class="item">
@@ -150,7 +148,8 @@
 					 </p>
 			</div>
 			<div class="col-md-12 text-center mt-5">
-				<h6 class="">Designed with <span style="color: red;">❤</span> by <a href="http://www.prat.ee/k">Prateek Gupta</a> </h6>
+				<h5  class="">Designed with <span style="color: red;">❤</span>by Polina and Plamen Kolevi
+                                  <hr width="80%"><br> <a href="">About</a> </h5>
 			</div>
 		</div>
 	</div>
