@@ -254,5 +254,16 @@ public class ConfigurationJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Boolean existByConfigName(String configname, User user) {
+        EntityManager em = getEntityManager();
+        try {
+            List<User> list = em.createNamedQuery("Configuration.findByConfignameAndUserId").setParameter("configname", configname).setParameter("userId", user).getResultList();
+            return !list.isEmpty();
+
+        } finally {
+            em.close();
+        }
+    }
+
 }
