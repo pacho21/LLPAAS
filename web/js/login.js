@@ -75,28 +75,26 @@ function doLogin(user, password) {
 
 
 function doReg(regUser, regName, regPassword) {
-    var emess = "Error desconocido, contactar con el administrador!"
+    var emess = "There was an error, please contact the developers!"
 
     $.ajax({
         type: "POST",
         url: "Register",
         data: {username: regUser, password: regPassword, name: regName},
         success: function (rsp) {
-            //en vez de un alert deberiamos usar algo del bootstrap ;D
-            if (rsp["mess"] === "El nombre de usuario ya esta registrado, porfavor introduzca otro nombre de usuario.") {
-                alert(rsp["mess"]);
-                $("#regUser").val("");
-                $("#regUser").focus();
-            } else {
-                location.reload();
-            }
-
+                //when succeeds
+                alert(rsp["mess"]);            
+                location.reload();            
         },
         error: function (e) {
             if (e["responseJSON"] === undefined)
                 alert(emess);
             else
                 alert(e["responseJSON"]["error"]);
+            if(e["responseJSON"]["error"]=="Username already exists"){
+                $("#username").val("");
+                $("#username").focus();
+            }
         }
 
     });

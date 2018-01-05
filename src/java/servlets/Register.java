@@ -42,7 +42,7 @@ public class Register extends HttpServlet {
         PassCrypt ps = new PassCrypt();
 
         try {
-            if (!uc.existByUsername(request.getParameter("userName"))) {
+            if (!uc.existByUsername(request.getParameter("username"))) {
                 User u = new User();
                 //{username: regUser, password: regPassword, name: regName,email:regMail}
 

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Context>
 <Context antiJARLocking="true" path="/LLPASS">
-  <Resource auth="Container" driverClassName="org.postgresql.Driver" 
-            maxActive="100" maxIdle="5" 
-            name="jdbc/MysqlDB" password="admin" 
-            type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5432/lunarlander" 
-            username="postgres"/>
 </Context>

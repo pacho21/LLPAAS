@@ -2,6 +2,7 @@ package servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
@@ -29,26 +30,32 @@ import tools.PassCrypt;
  */
 public class Login extends HttpServlet {
 
-    EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-    UserJpaController uc = new UserJpaController(emf);
-    CookieControl cookieController = new CookieControl();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
+        UserJpaController uc = new UserJpaController(emf);
+        CookieControl cookieController = new CookieControl();
 
         User u = cookieController.checkCookie(req.getCookies());
 
         if (u != null) {
 
             req.setAttribute("User", u);
-            RequestDispatcher forwardTo = req.getRequestDispatcher("/game.jsp");
+            RequestDispatcher forwardTo = req.getRequestDispatcher("game.jsp");
             forwardTo.forward(req, resp);
+        } else {
+            RequestDispatcher forwardToLogin = req.getRequestDispatcher("Login.jsp");
+            resp.setContentType("application/json");
+            forwardToLogin.forward(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, String> emess = new HashMap<>();
+        EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
+        UserJpaController uc = new UserJpaController(emf);
+        CookieControl cookieController = new CookieControl();
 
         Gson gson = new GsonBuilder().create();
         User u = uc.findUserByUsername(req.getParameter("username"));
