@@ -11,7 +11,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -34,8 +33,8 @@ public class ConfigurationJpaController implements Serializable {
     }
 
     public void create(Configuration configuration) {
-        if (configuration.getScoreboardCollection() == null) {
-            configuration.setScoreboardCollection(new ArrayList<Scoreboard>());
+        if (configuration.getScoreboardList() == null) {
+            configuration.setScoreboardList(new ArrayList<Scoreboard>());
         }
         EntityManager em = null;
         try {
@@ -51,28 +50,28 @@ public class ConfigurationJpaController implements Serializable {
                 usId = em.getReference(usId.getClass(), usId.getUsId());
                 configuration.setUsId(usId);
             }
-            Collection<Scoreboard> attachedScoreboardCollection = new ArrayList<Scoreboard>();
-            for (Scoreboard scoreboardCollectionScoreboardToAttach : configuration.getScoreboardCollection()) {
-                scoreboardCollectionScoreboardToAttach = em.getReference(scoreboardCollectionScoreboardToAttach.getClass(), scoreboardCollectionScoreboardToAttach.getScId());
-                attachedScoreboardCollection.add(scoreboardCollectionScoreboardToAttach);
+            List<Scoreboard> attachedScoreboardList = new ArrayList<Scoreboard>();
+            for (Scoreboard scoreboardListScoreboardToAttach : configuration.getScoreboardList()) {
+                scoreboardListScoreboardToAttach = em.getReference(scoreboardListScoreboardToAttach.getClass(), scoreboardListScoreboardToAttach.getScId());
+                attachedScoreboardList.add(scoreboardListScoreboardToAttach);
             }
-            configuration.setScoreboardCollection(attachedScoreboardCollection);
+            configuration.setScoreboardList(attachedScoreboardList);
             em.persist(configuration);
             if (cfDificulty != null) {
-                cfDificulty.getConfigurationCollection().add(configuration);
+                cfDificulty.getConfigurationList().add(configuration);
                 cfDificulty = em.merge(cfDificulty);
             }
             if (usId != null) {
-                usId.getConfigurationCollection().add(configuration);
+                usId.getConfigurationList().add(configuration);
                 usId = em.merge(usId);
             }
-            for (Scoreboard scoreboardCollectionScoreboard : configuration.getScoreboardCollection()) {
-                Configuration oldCfIdOfScoreboardCollectionScoreboard = scoreboardCollectionScoreboard.getCfId();
-                scoreboardCollectionScoreboard.setCfId(configuration);
-                scoreboardCollectionScoreboard = em.merge(scoreboardCollectionScoreboard);
-                if (oldCfIdOfScoreboardCollectionScoreboard != null) {
-                    oldCfIdOfScoreboardCollectionScoreboard.getScoreboardCollection().remove(scoreboardCollectionScoreboard);
-                    oldCfIdOfScoreboardCollectionScoreboard = em.merge(oldCfIdOfScoreboardCollectionScoreboard);
+            for (Scoreboard scoreboardListScoreboard : configuration.getScoreboardList()) {
+                Configuration oldCfIdOfScoreboardListScoreboard = scoreboardListScoreboard.getCfId();
+                scoreboardListScoreboard.setCfId(configuration);
+                scoreboardListScoreboard = em.merge(scoreboardListScoreboard);
+                if (oldCfIdOfScoreboardListScoreboard != null) {
+                    oldCfIdOfScoreboardListScoreboard.getScoreboardList().remove(scoreboardListScoreboard);
+                    oldCfIdOfScoreboardListScoreboard = em.merge(oldCfIdOfScoreboardListScoreboard);
                 }
             }
             em.getTransaction().commit();
@@ -93,15 +92,15 @@ public class ConfigurationJpaController implements Serializable {
             Dificulty cfDificultyNew = configuration.getCfDificulty();
             User usIdOld = persistentConfiguration.getUsId();
             User usIdNew = configuration.getUsId();
-            Collection<Scoreboard> scoreboardCollectionOld = persistentConfiguration.getScoreboardCollection();
-            Collection<Scoreboard> scoreboardCollectionNew = configuration.getScoreboardCollection();
+            List<Scoreboard> scoreboardListOld = persistentConfiguration.getScoreboardList();
+            List<Scoreboard> scoreboardListNew = configuration.getScoreboardList();
             List<String> illegalOrphanMessages = null;
-            for (Scoreboard scoreboardCollectionOldScoreboard : scoreboardCollectionOld) {
-                if (!scoreboardCollectionNew.contains(scoreboardCollectionOldScoreboard)) {
+            for (Scoreboard scoreboardListOldScoreboard : scoreboardListOld) {
+                if (!scoreboardListNew.contains(scoreboardListOldScoreboard)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Scoreboard " + scoreboardCollectionOldScoreboard + " since its cfId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Scoreboard " + scoreboardListOldScoreboard + " since its cfId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -115,38 +114,38 @@ public class ConfigurationJpaController implements Serializable {
                 usIdNew = em.getReference(usIdNew.getClass(), usIdNew.getUsId());
                 configuration.setUsId(usIdNew);
             }
-            Collection<Scoreboard> attachedScoreboardCollectionNew = new ArrayList<Scoreboard>();
-            for (Scoreboard scoreboardCollectionNewScoreboardToAttach : scoreboardCollectionNew) {
-                scoreboardCollectionNewScoreboardToAttach = em.getReference(scoreboardCollectionNewScoreboardToAttach.getClass(), scoreboardCollectionNewScoreboardToAttach.getScId());
-                attachedScoreboardCollectionNew.add(scoreboardCollectionNewScoreboardToAttach);
+            List<Scoreboard> attachedScoreboardListNew = new ArrayList<Scoreboard>();
+            for (Scoreboard scoreboardListNewScoreboardToAttach : scoreboardListNew) {
+                scoreboardListNewScoreboardToAttach = em.getReference(scoreboardListNewScoreboardToAttach.getClass(), scoreboardListNewScoreboardToAttach.getScId());
+                attachedScoreboardListNew.add(scoreboardListNewScoreboardToAttach);
             }
-            scoreboardCollectionNew = attachedScoreboardCollectionNew;
-            configuration.setScoreboardCollection(scoreboardCollectionNew);
+            scoreboardListNew = attachedScoreboardListNew;
+            configuration.setScoreboardList(scoreboardListNew);
             configuration = em.merge(configuration);
             if (cfDificultyOld != null && !cfDificultyOld.equals(cfDificultyNew)) {
-                cfDificultyOld.getConfigurationCollection().remove(configuration);
+                cfDificultyOld.getConfigurationList().remove(configuration);
                 cfDificultyOld = em.merge(cfDificultyOld);
             }
             if (cfDificultyNew != null && !cfDificultyNew.equals(cfDificultyOld)) {
-                cfDificultyNew.getConfigurationCollection().add(configuration);
+                cfDificultyNew.getConfigurationList().add(configuration);
                 cfDificultyNew = em.merge(cfDificultyNew);
             }
             if (usIdOld != null && !usIdOld.equals(usIdNew)) {
-                usIdOld.getConfigurationCollection().remove(configuration);
+                usIdOld.getConfigurationList().remove(configuration);
                 usIdOld = em.merge(usIdOld);
             }
             if (usIdNew != null && !usIdNew.equals(usIdOld)) {
-                usIdNew.getConfigurationCollection().add(configuration);
+                usIdNew.getConfigurationList().add(configuration);
                 usIdNew = em.merge(usIdNew);
             }
-            for (Scoreboard scoreboardCollectionNewScoreboard : scoreboardCollectionNew) {
-                if (!scoreboardCollectionOld.contains(scoreboardCollectionNewScoreboard)) {
-                    Configuration oldCfIdOfScoreboardCollectionNewScoreboard = scoreboardCollectionNewScoreboard.getCfId();
-                    scoreboardCollectionNewScoreboard.setCfId(configuration);
-                    scoreboardCollectionNewScoreboard = em.merge(scoreboardCollectionNewScoreboard);
-                    if (oldCfIdOfScoreboardCollectionNewScoreboard != null && !oldCfIdOfScoreboardCollectionNewScoreboard.equals(configuration)) {
-                        oldCfIdOfScoreboardCollectionNewScoreboard.getScoreboardCollection().remove(scoreboardCollectionNewScoreboard);
-                        oldCfIdOfScoreboardCollectionNewScoreboard = em.merge(oldCfIdOfScoreboardCollectionNewScoreboard);
+            for (Scoreboard scoreboardListNewScoreboard : scoreboardListNew) {
+                if (!scoreboardListOld.contains(scoreboardListNewScoreboard)) {
+                    Configuration oldCfIdOfScoreboardListNewScoreboard = scoreboardListNewScoreboard.getCfId();
+                    scoreboardListNewScoreboard.setCfId(configuration);
+                    scoreboardListNewScoreboard = em.merge(scoreboardListNewScoreboard);
+                    if (oldCfIdOfScoreboardListNewScoreboard != null && !oldCfIdOfScoreboardListNewScoreboard.equals(configuration)) {
+                        oldCfIdOfScoreboardListNewScoreboard.getScoreboardList().remove(scoreboardListNewScoreboard);
+                        oldCfIdOfScoreboardListNewScoreboard = em.merge(oldCfIdOfScoreboardListNewScoreboard);
                     }
                 }
             }
@@ -180,24 +179,24 @@ public class ConfigurationJpaController implements Serializable {
                 throw new NonexistentEntityException("The configuration with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Scoreboard> scoreboardCollectionOrphanCheck = configuration.getScoreboardCollection();
-            for (Scoreboard scoreboardCollectionOrphanCheckScoreboard : scoreboardCollectionOrphanCheck) {
+            List<Scoreboard> scoreboardListOrphanCheck = configuration.getScoreboardList();
+            for (Scoreboard scoreboardListOrphanCheckScoreboard : scoreboardListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Configuration (" + configuration + ") cannot be destroyed since the Scoreboard " + scoreboardCollectionOrphanCheckScoreboard + " in its scoreboardCollection field has a non-nullable cfId field.");
+                illegalOrphanMessages.add("This Configuration (" + configuration + ") cannot be destroyed since the Scoreboard " + scoreboardListOrphanCheckScoreboard + " in its scoreboardList field has a non-nullable cfId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Dificulty cfDificulty = configuration.getCfDificulty();
             if (cfDificulty != null) {
-                cfDificulty.getConfigurationCollection().remove(configuration);
+                cfDificulty.getConfigurationList().remove(configuration);
                 cfDificulty = em.merge(cfDificulty);
             }
             User usId = configuration.getUsId();
             if (usId != null) {
-                usId.getConfigurationCollection().remove(configuration);
+                usId.getConfigurationList().remove(configuration);
                 usId = em.merge(usId);
             }
             em.remove(configuration);
@@ -254,16 +253,5 @@ public class ConfigurationJpaController implements Serializable {
             em.close();
         }
     }
-
-    public Boolean existByConfigName(String configname, User user) {
-        EntityManager em = getEntityManager();
-        try {
-            List<User> list = em.createNamedQuery("Configuration.findByConfignameAndUserId").setParameter("configname", configname).setParameter("userId", user).getResultList();
-            return !list.isEmpty();
-
-        } finally {
-            em.close();
-        }
-    }
-
+    
 }

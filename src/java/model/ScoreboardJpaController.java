@@ -47,11 +47,11 @@ public class ScoreboardJpaController implements Serializable {
             }
             em.persist(scoreboard);
             if (cfId != null) {
-                cfId.getScoreboardCollection().add(scoreboard);
+                cfId.getScoreboardList().add(scoreboard);
                 cfId = em.merge(cfId);
             }
             if (usId != null) {
-                usId.getScoreboardCollection().add(scoreboard);
+                usId.getScoreboardList().add(scoreboard);
                 usId = em.merge(usId);
             }
             em.getTransaction().commit();
@@ -82,19 +82,19 @@ public class ScoreboardJpaController implements Serializable {
             }
             scoreboard = em.merge(scoreboard);
             if (cfIdOld != null && !cfIdOld.equals(cfIdNew)) {
-                cfIdOld.getScoreboardCollection().remove(scoreboard);
+                cfIdOld.getScoreboardList().remove(scoreboard);
                 cfIdOld = em.merge(cfIdOld);
             }
             if (cfIdNew != null && !cfIdNew.equals(cfIdOld)) {
-                cfIdNew.getScoreboardCollection().add(scoreboard);
+                cfIdNew.getScoreboardList().add(scoreboard);
                 cfIdNew = em.merge(cfIdNew);
             }
             if (usIdOld != null && !usIdOld.equals(usIdNew)) {
-                usIdOld.getScoreboardCollection().remove(scoreboard);
+                usIdOld.getScoreboardList().remove(scoreboard);
                 usIdOld = em.merge(usIdOld);
             }
             if (usIdNew != null && !usIdNew.equals(usIdOld)) {
-                usIdNew.getScoreboardCollection().add(scoreboard);
+                usIdNew.getScoreboardList().add(scoreboard);
                 usIdNew = em.merge(usIdNew);
             }
             em.getTransaction().commit();
@@ -128,12 +128,12 @@ public class ScoreboardJpaController implements Serializable {
             }
             Configuration cfId = scoreboard.getCfId();
             if (cfId != null) {
-                cfId.getScoreboardCollection().remove(scoreboard);
+                cfId.getScoreboardList().remove(scoreboard);
                 cfId = em.merge(cfId);
             }
             User usId = scoreboard.getUsId();
             if (usId != null) {
-                usId.getScoreboardCollection().remove(scoreboard);
+                usId.getScoreboardList().remove(scoreboard);
                 usId = em.merge(usId);
             }
             em.remove(scoreboard);

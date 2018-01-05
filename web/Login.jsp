@@ -1,4 +1,18 @@
+<%@page import="model.User"%>
+<%@page import="tools.CookieControl"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+
+    CookieControl cookieController = new CookieControl();
+    if (request.getCookies() != null) {
+        User u = cookieController.checkCookie(request.getCookies());
+        if (u != null) {
+            request.setAttribute("User", u);
+            RequestDispatcher forwardTo = request.getRequestDispatcher("game.jsp");
+            forwardTo.forward(request, response);
+        }
+    }
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +31,7 @@
         <link href="css/login.css" rel="stylesheet">
     </head>
     <body>
-         <div class="container">
+        <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <div class="panel with-nav-tabs panel-info">
@@ -140,9 +154,9 @@
                 </div>
             </div>                
         </div>
-        
-       
-        
-        
+
+
+
+
     </body>
 </html>

@@ -11,10 +11,10 @@
     <servlet>
         <servlet-name>Register</servlet-name>
         <servlet-class>servlets.Register</servlet-class>
-    </servlet>
+    </servlet>   
     <servlet>
-        <servlet-name>Configuration</servlet-name>
-        <servlet-class>servlets.Configuration</servlet-class>
+        <servlet-name>ConfigurationServlet</servlet-name>
+        <servlet-class>servlets.ConfigurationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -25,8 +25,8 @@
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Configuration</servlet-name>
-        <url-pattern>/Configuration</url-pattern>
+        <servlet-name>ConfigurationServlet</servlet-name>
+        <url-pattern>/ConfigurationServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -19,11 +19,11 @@ $(document).ready(function () {
     $("#cargarConf").click(function () { //al hacer click en guardar -> ejecutar metodo ->
         cargarConfiguracion();
     });
+    
     $("#guardar").click(function () {
         guardarConfiguracion();
         $("#conf_name").val("");
     });
-
 });
 window.onload = function arrancarJuego() {
 
@@ -398,19 +398,19 @@ function crearNave(m, d, l) {
         case 1:
             gasolina = 100;
             gasolinaTotal = 100;
-            document.getElementById("dificultad").innerHTML = "Fácil";
+            document.getElementById("dificultad").innerHTML = "Easy";
             restart();
             break;
         case 2:
             gasolina = 50;
             gasolinaTotal = 50;
-            document.getElementById("dificultad").innerHTML = "Media";
+            document.getElementById("dificultad").innerHTML = "Medium";
             restart();
             break;
         case 3:
             gasolina = 25;
             gasolinaTotal = 35;
-            document.getElementById("dificultad").innerHTML = "Difícil";
+            document.getElementById("dificultad").innerHTML = "Hard";
             restart();
             break;
     }
@@ -422,7 +422,7 @@ function cargarGSON() {
     var emess = "No se ha podido cargar la configuración!";
     $.ajax({
         type: "GET",
-        url: "ConfigAccess", //canviar al Servlet després de comprovar que funciona.
+        url: "ConfigurationServlet", //canviar al Servlet després de comprovar que funciona.
         dataType: "json",
         success: function (jsn) {
             $.each(jsn.opt, function (i)
@@ -431,15 +431,12 @@ function cargarGSON() {
                 var nom = jsn.opt[i].nombre;
                 var dif = jsn.opt[i].dificultad; //$(this).attr('nombre');
                 var nav = jsn.opt[i].modeloNave; //$(this).attr('edad');
-                var lun = jsn.opt[i].modeloLuna; //$(this).attr('edad');                
-                var dStr = dificultyToString(dif);
-                var navStr = modNaveToString(nav);
-                var lunStr = modLunaToString(lun);
+                var lun = jsn.opt[i].modeloLuna; //$(this).attr('edad');                                
                 confXML[id] = {nave: nav, difi: dif, luna: lun};
                 $("#xmlSettings").append(
                         "<option id='" + id + "'>" + nom + " Dificultad: "
-                        + dStr + " Nave: " +
-                        navStr + " Luna: " + lunStr
+                        + dif + " Nave: " +
+                        nav + " Luna: " + lun
                         );
             });
         },
@@ -456,6 +453,9 @@ function guardarConfiguracion() {
 
     var emess = "No se ha podido guardar la configuración!"
     var nam = $("#conf_name").val();
+    var dif = $("#dificultad").text();
+    var nav = $("#modeloNave").text();
+    var moon = $("#modeloLuna").text();
     var len = $("#conf_name").val().trim().length;
     if (len < 1) {
         alert("Debes introducir un nombre de configuración");
@@ -465,14 +465,12 @@ function guardarConfiguracion() {
         $.ajax({
 
             type: "POST",
-            url: "ConfigAccess",
-            data: {nombre: nam, dificultad: dificultad, modeloNave: modeloNave, modeloLuna: modeloLuna},
+            url: "ConfigurationServlet",
+            data: {configname: nam, cfdificulty: dif, cfspaceship: nav, cfmoon: moon},
             success: function (rsp) {
                 alert(rsp["mess"]);
                 confXML[rsp.id] = {nave: modeloNave, difi: dificultad, luna: modeloLuna};
-                var dStr = dificultyToString(dificultad);
-                var navStr = modNaveToString(modeloNave);
-                var lunStr = modLunaToString(modeloLuna);
+                
                 $("#xmlSettings").append(
                         "<option id='" + rsp.id + "'>" + nam + " Dificultad: "
                         + dStr + " Nave: " +

@@ -35,14 +35,19 @@ public class Login extends HttpServlet {
         EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
         UserJpaController uc = new UserJpaController(emf);
         CookieControl cookieController = new CookieControl();
+        if (req.getCookies() != null) {
+            User u = cookieController.checkCookie(req.getCookies());
 
-        User u = cookieController.checkCookie(req.getCookies());
+            if (u != null) {
 
-        if (u != null) {
-
-            req.setAttribute("User", u);
-            RequestDispatcher forwardTo = req.getRequestDispatcher("game.jsp");
-            forwardTo.forward(req, resp);
+                req.setAttribute("User", u);
+                RequestDispatcher forwardTo = req.getRequestDispatcher("game.jsp");
+                forwardTo.forward(req, resp);
+            } else {
+                RequestDispatcher forwardToLogin = req.getRequestDispatcher("Login.jsp");
+                resp.setContentType("application/json");
+                forwardToLogin.forward(req, resp);
+            }
         } else {
             RequestDispatcher forwardToLogin = req.getRequestDispatcher("Login.jsp");
             resp.setContentType("application/json");

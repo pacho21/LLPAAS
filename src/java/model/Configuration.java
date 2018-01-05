@@ -6,7 +6,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -61,7 +61,7 @@ public class Configuration implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private User usId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cfId", fetch = FetchType.EAGER)
-    private Collection<Scoreboard> scoreboardCollection;
+    private List<Scoreboard> scoreboardList;
 
     public Configuration() {
     }
@@ -126,12 +126,12 @@ public class Configuration implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Scoreboard> getScoreboardCollection() {
-        return scoreboardCollection;
+    public List<Scoreboard> getScoreboardList() {
+        return scoreboardList;
     }
 
-    public void setScoreboardCollection(Collection<Scoreboard> scoreboardCollection) {
-        this.scoreboardCollection = scoreboardCollection;
+    public void setScoreboardList(List<Scoreboard> scoreboardList) {
+        this.scoreboardList = scoreboardList;
     }
 
     @Override

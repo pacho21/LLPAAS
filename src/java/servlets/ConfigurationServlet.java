@@ -21,12 +21,13 @@ import model.Dificulty;
 import model.DificultyJpaController;
 import model.User;
 import model.UserJpaController;
+import tools.CookieControl;
 
 /**
  *
  * @author admin
  */
-public class Configuration extends HttpServlet {
+public class ConfigurationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -34,7 +35,8 @@ public class Configuration extends HttpServlet {
         try {
             EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
             UserJpaController uc = new UserJpaController(emf);
-            User u = uc.findUserByUsername(request.getParameter("userName"));
+            CookieControl cook = new CookieControl();
+            User u = cook.checkCookie(request.getCookies());
 
             if (u == null) {
                 Map<String, String> emess = new HashMap<>();
@@ -49,8 +51,14 @@ public class Configuration extends HttpServlet {
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
                 response.setContentType("application/json");
                 PrintWriter pw = response.getWriter();
-                pw.println(gson.toJson(u.getConfigurationCollection()));
-
+                if (!u.getConfigurationList().isEmpty()) {
+                    pw.println(gson.toJson(u.getConfigurationList()));
+                } else {
+                    Map<String, String> emess = new HashMap<>();
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    emess.put("error", "Configurations not found!");
+                    pw.println(emess);
+                }
             }
         } catch (Exception e) {
             Map<String, String> emess = new HashMap<>();
@@ -73,7 +81,8 @@ public class Configuration extends HttpServlet {
             EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
             UserJpaController uc = new UserJpaController(emf);
             ConfigurationJpaController cc = new ConfigurationJpaController(emf);
-            User u = uc.findUserByUsername(request.getParameter("userName"));
+            CookieControl cook = new CookieControl();
+            User u = cook.checkCookie(request.getCookies());
             if (u == null) {
                 Map<String, String> emess = new HashMap<>();
                 emess.put("error", "User not found");
@@ -84,35 +93,28 @@ public class Configuration extends HttpServlet {
                 PrintWriter pw = response.getWriter();
                 pw.println(gson.toJson(emess));
             } else {
-                if (!cc.existByConfigName(request.getParameter("configname"), u)) {
-                    model.DificultyJpaController dc = new DificultyJpaController(emf);
-                    Dificulty d = dc.findDificulty(request.getParameter("cfdificulty"));
-                    model.Configuration conf = new model.Configuration();
-                    conf.setCfName(request.getParameter("cfname"));
-                    conf.setCfDificulty(d);
-                    conf.setCfMoon(request.getParameter("cfmoon"));
-                    conf.setCfSpaceship(request.getParameter("cfspaceship"));
-                    conf.setUsId(u);
-                    cc.create(conf);
 
-                    Map<String, String> mess = new HashMap<>();
-                    mess.put("mess", "Configuration added");
+                model.DificultyJpaController dc = new DificultyJpaController(emf);
+                Dificulty d = dc.findDificulty(request.getParameter("cfdificulty"));
+                model.Configuration conf = new model.Configuration();
+                System.out.println("1st");
+                conf.setCfName(request.getParameter("configname"));
+                conf.setCfDificulty(d);
+                conf.setCfMoon(request.getParameter("cfmoon"));
+                conf.setCfSpaceship(request.getParameter("cfspaceship"));
+                conf.setUsId(u);
+                System.out.println("hola");
+                cc.create(conf);
 
-                    Gson gson = new GsonBuilder().create();
+                Map<String, String> mess = new HashMap<>();
+                mess.put("mess", "Configuration added");
 
-                    response.setContentType("application/json");
-                    PrintWriter pw = response.getWriter();
-                    pw.println(gson.toJson(mess));
-                } else {
-                    Map<String, String> emess = new HashMap<>();
-                    emess.put("error", "Configuration name already exists");
+                Gson gson = new GsonBuilder().create();
 
-                    Gson gson = new GsonBuilder().create();
-                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    response.setContentType("application/json");
-                    PrintWriter pw = response.getWriter();
-                    pw.println(gson.toJson(emess));
-                }
+                response.setContentType("application/json");
+                PrintWriter pw = response.getWriter();
+                pw.println(gson.toJson(mess));
+
             }
 
         } catch (Exception e) {
