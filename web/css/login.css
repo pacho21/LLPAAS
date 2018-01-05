@@ -1,4 +1,6 @@
-
+html{
+    background-image: url("../img/estrellas.png");
+}
 
 .panel-login {
     border-color: #ccc;
